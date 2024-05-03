@@ -18,32 +18,36 @@ Implementar un programa que permita al usuario jugar de forma individual al jueg
 * El tablero tiene un total de 225 casillas que pueden contener una letra o estar vacías. Al empezar el juego, el tablero debe estar vacío.
 * La casilla central del tablero es especial, pues es la casilla donde debe situarse la primera palabra. Es decir, al menos una de las fichas que conformen la primera palabra debe situarse en la casilla central.
 * Se dispone de las siguientes fichas:
-
+````
 | Ficha | Total | | Ficha | Total | | Ficha | Total | 
-| :---: | :---: | | :---: | :---: | | :---: | :---: |
-| A | 12 | | J | 1 | | S | 7 |
-| B | 2 | | K | 1 | | T | 4 |
-| C | 4 | | L | 4 | | U | 6 |
-| D | 5 | | M | 3 | | V | 1 | 
-| E | 12 | | N | 5 | | W | 1 |
-| F | 2 | | O | 9 | | X | 1 | 
-| G | 2 | | P | 2 | | Y | 1 | 
-| H | 2 | | Q | 1 | | Z | 1 | 
-| I | 6 | | R | 5 | |  |  | 
-
-* Cada ficha tiene la siguiente puntuación:
-
-| Ficha | Puntuación | | Ficha | Puntuación | | Ficha | Puntuación | 
 | :---: | :---: | | :---: | :---: | | :---: | :---: | 
-| A | 1 | | J | 8 | | S | 1 |
-| B | 3 | | K | 5 | | T | 1 |
-| C | 3 | | L | 1 | | U | 1 |
-| D | 2 | | M | 3 | | V | 4 | 
-| E | 1 | | N | 1 | | W | 4 |
-| F | 4 | | O | 1 | | X | 8 | 
-| G | 2 | | P | 3 | | Y | 4 | 
-| H | 4 | | Q | 10 | | Z | 10 | 
-| I | 1 | | R | 1 | |  |  | 
+| A     | 12    | | J     | 1     | | S     | 7     | 
+| B     | 2     | | K     | 1     | | T     | 4     | 
+| C     | 4     | | L     | 4     | | U     | 6     | 
+| D     | 5     | | M     | 3     | | V     | 1     | 
+| E     | 12    | | N     | 5     | | W     | 1     | 
+| F     | 2     | | O     | 9     | | X     | 1     | 
+| G     | 2     | | P     | 2     | | Y     | 1     | 
+| H     | 2     | | Q     | 1     | | Z     | 1     | 
+| I     | 6     | | R     | 5     | |       |       | 
+````
+
+* Cada ficha tiene la siguiente puntuación: 
+
+````
+| Ficha | Puntuación | | Ficha | Puntuación | | Ficha | Puntuación | 
+| :---: | :--------: | | :---: | :--------: | | :---: | :--------: | 
+| A     | 1          | | J     | 8          | | S     | 1          | 
+| B     | 3          | | K     | 5          | | T     | 1          | 
+| C     | 3          | | L     | 1          | | U     | 1          | 
+| D     | 2          | | M     | 3          | | V     | 4          |   
+| E     | 1          | | N     | 1          | | W     | 4          | 
+| F     | 4          | | O     | 1          | | X     | 8          | 
+| G     | 2          | | P     | 3          | | Y     | 4          | 
+| H     | 4          | | Q     | 10         | | Z     | 10         | 
+| I     | 1          | | R     | 1          | |       |            | 
+````
+
 
 * Cuando empieza el juego, se deben seleccionar 7 fichas de manera aleatoria, teniendo en cuenta que el total de fichas es 100.
 * En cada turno, se debe mostrar al usuario las fichas de las que dispone para poder formar una nueva palabra y colocarla en el tablero. Como se dijo anteriormente, la primera palabra debe tener al menos una ficha sobre la casilla central.
