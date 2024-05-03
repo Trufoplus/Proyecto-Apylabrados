@@ -1,5 +1,11 @@
-# Apylabrados: el juego de palabras
+# Apylabrados
+![Top Language](https://img.shields.io/github/languages/top/Trufoplus/Proyecto-Apylabrados?style=for-the-badge&color=%2300AABB) ![Forks](https://img.shields.io/github/forks/Trufoplus/Proyecto-Apylabrados?style=for-the-badge&color=%23AA0067) ![Stars](https://img.shields.io/github/stars/Trufoplus/Proyecto-Apylabrados?style=for-the-badge&color=%23ffff00) 
+### Acerca de Apylabrados
+Apylabrados es un juego de palabras similar al apalabrados creado con Python.
+### Por que Apylabrados
+Este es un proyecto pensado para practicar todo lo aprendido en el curso de Python. 
 
+# Guia de Apylabrados: el juego de palabras
 
 ## Objetivos
 
