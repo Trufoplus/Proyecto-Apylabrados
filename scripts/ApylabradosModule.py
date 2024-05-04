@@ -32,7 +32,7 @@ class Pawns():
         """Crea la bolsa de fichas inicial a partir de archivo
             bag_of_pawns.csv
         """
-        bags_of_pawns = "datas/bag_of_pawns.csv"
+        bags_of_pawns = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\bag_of_pawns.csv"
         with open(bags_of_pawns, "r") as file:
             reader = csv.reader(file, quoting=csv.QUOTE_NONNUMERIC)
             for row in reader:
