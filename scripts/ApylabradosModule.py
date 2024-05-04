@@ -53,4 +53,23 @@ class Pawns():
                     pawns_count[pawn] = 1
             print(pawns_count)
         else:
-            print("La bolsa de fichas esta vacia") 
+            print("La bolsa de fichas esta vacia")
+    
+    def takeRandomPawn(self):
+        import random
+        random_pawn = random.randint(1, len(self.letters))
+        my_pawn = self.letters[random_pawn]
+        self.letters = np.delete(self.letters, random_pawn)  
+        print(f"has agarrado la letra: {my_pawn}")
+        self.player_pawns(my_pawn)
+    
+    def player_pawns(self, new_letter):
+        self.new_letter = new_letter
+        my_letters = []
+        my_letters.append(self.new_letter)
+        print("Estas son mis letras:")
+        print(my_letters)
+         
+        
+        
+
