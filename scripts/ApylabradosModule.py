@@ -53,9 +53,4 @@ class Pawns():
                     pawns_count[pawn] = 1
             print(pawns_count)
         else:
-            print("La bolsa de fichas esta vacia")
-
-
-my_bag = Pawns()
-my_bag.createBag()
-my_bag.showPawns()    
+            print("La bolsa de fichas esta vacia") 
