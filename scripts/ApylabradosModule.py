@@ -1,14 +1,19 @@
 import numpy as np
 import csv
+import random
 
 class Pawns():
-    def __init__(self, letters: str = np.empty((0))):
+    def __init__(self, letters: str = None):
         """Crear la bolsa de fichas (pawns) del juegos
 
         Args:
             letters (str, optional): _bolsa con las fichas/letras_. Defaults to np.empty((0)).
         """
         self.letters = letters
+        if letters is None:
+            self.letters = []
+        else:
+            self.letters = letters.copy()
     
     def addPawn(self, c: str):
         """Añade una pieza(pawn) al conjunto de letras
@@ -16,7 +21,7 @@ class Pawns():
         Args:
             c (str): letra a añadir
         """
-        self.letters = np.append(self.letters, c)
+        self.letters.append(c)
     
     def addPawns(self, c: str, n: int):
         """Añadir Varias fichas a la vez de la misma letra
@@ -56,19 +61,17 @@ class Pawns():
             print("La bolsa de fichas esta vacia")
     
     def takeRandomPawn(self):
-        import random
-        random_pawn = random.randint(1, len(self.letters))
-        my_pawn = self.letters[random_pawn]
-        self.letters = np.delete(self.letters, random_pawn)  
-        print(f"has agarrado la letra: {my_pawn}")
-        self.player_pawns(my_pawn)
+        """Agarra una ficha aleatoria de la bolsa, se la guarda
+        en 'player_pawns' y la elimina de la bolsa.
+        """
+        if self.letters:
+            random_pawn_index = random.randint(0, len(self.letters) -1)
+            my_pawn = self.letters.pop(random_pawn_index)
+            return my_pawn
+        else:
+            print("La bolsa de fichas esta vacia, no puede agarrar mas")
     
-    def player_pawns(self, new_letter):
-        self.new_letter = new_letter
-        my_letters = []
-        my_letters.append(self.new_letter)
-        print("Estas son mis letras:")
-        print(my_letters)
+
          
         
         
