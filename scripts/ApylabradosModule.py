@@ -61,8 +61,7 @@ class Pawns():
             print("La bolsa de fichas esta vacia")
     
     def takeRandomPawn(self):
-        """Agarra una ficha aleatoria de la bolsa, se la guarda
-        en 'player_pawns' y la elimina de la bolsa.
+        """Agarra una ficha aleatoria de la bolsa y la elimina de la bolsa.
         """
         if self.letters:
             random_pawn_index = random.randint(0, len(self.letters) -1)
@@ -70,9 +69,78 @@ class Pawns():
             return my_pawn
         else:
             print("La bolsa de fichas esta vacia, no puede agarrar mas")
+
+class Word():
+    def __init__(self):
+        self.word = []
     
+    def __str__(self):
+        """
+        Imprimimos la palabra en formato string
+        """
+        return ', '.join(self.word)
+    
+    def areEqual(self, w:str):
+        """
+        Comprueba si dos palabras son iguales
+        """
+        if w in self.word:
+            return True
+        return False
+    
+    def isEmpty(self):
+        """
+        Comprueba si una palabra esta vacia
+        """
+        return not self.word
+    
+    @classmethod
+    def readWord(cls):
+        """
+        Lee una palabra por teclado y la devuelve como un objeto de la clase Word
+        """
+        input_word = input().strip().upper()
+        w = Word()
+        w.word.append(input_word)
+        return w
+    
+    @staticmethod
+    def readWordFromFile(f):
+        """
+        lee una palabra de un fichero
+        """
+        return f.readline().strip().upper()    
+                 
+    
+class Dictionary():
+    filepath = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\dictionary.txt"
+    
+    def __init__(self):
+        pass
+    
+    @staticmethod
+    def validateWord(word:str):
+        """
+        Comprueba si una palabra esta en el diccionario
+        """
+        file = open(Dictionary.filepath, 'r')
+        while True:
+            readed_line = Word.readWordFromFile(file)
+            if readed_line == word.upper():
+                file.close()
+                return True
+            if readed_line == "":
+                file.close()
+                return False
 
-         
-        
-        
+                
+  
+           
+                    
+                        
 
+
+    
+    
+            
+        
