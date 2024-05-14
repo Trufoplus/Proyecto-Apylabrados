@@ -115,9 +115,6 @@ class Word():
 class Dictionary():
     filepath = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\dictionary.txt"
     
-    def __init__(self):
-        pass
-    
     @staticmethod
     def validateWord(word:str):
         """
@@ -126,11 +123,12 @@ class Dictionary():
         file = open(Dictionary.filepath, 'r')
         while True:
             readed_line = Word.readWordFromFile(file)
-            if readed_line == word.upper():
+            if word.areEqual(readed_line):
                 file.close()
                 return True
             if readed_line == "":
                 file.close()
+                print("La palabra no se encuentra en el diccionario")
                 return False
 
                 
