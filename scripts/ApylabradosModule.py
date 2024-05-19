@@ -69,6 +69,10 @@ class Pawns():
             return my_pawn
         else:
             print("La bolsa de fichas esta vacia, no puede agarrar mas")
+    
+    def getFrecuency(self):
+        return FrecuencyTable.frecuencies
+        
 
 class Word():
     def __init__(self):
@@ -110,7 +114,9 @@ class Word():
         lee una palabra de un fichero
         """
         return f.readline().strip().upper()    
-                 
+
+    def getFrecuency(self):
+        return FrecuencyTable.frecuencies                 
     
 class Dictionary():
     filepath = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\dictionary.txt"
@@ -131,14 +137,23 @@ class Dictionary():
                 print("La palabra no se encuentra en el diccionario")
                 return False
 
-                
-  
-           
-                    
-                        
 
-
-    
-    
-            
+class FrecuencyTable():
+    def __init__(self):
+        self.letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+                        'n','ñ','o','p','q','r','s','t','u','v','w','y','z']
+        self.frequencies = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         
+            
+    def showFrequency(self):
+        for letter, frequency in zip(self.letters, self.frequencies):
+            if frequency != 0:
+                    print(f'{letter}: {frequency}')
+    
+    @staticmethod
+    def isSubset(self,object1, object2):
+        return object1.issubset(object2)
+    
+    def update(self, c:str):
+        index = self.letters.index(c)
+        self.frequencies[index] += 1
