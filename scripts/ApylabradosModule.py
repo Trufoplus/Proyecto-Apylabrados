@@ -50,15 +50,10 @@ class Pawns():
         total_pawns = len(self.letters)
         if total_pawns > 0:
             print(f"Numero total de fichas: {total_pawns}")
-            pawns_count = {}
-            for pawn in self.letters:
-                if pawn in pawns_count:
-                    pawns_count[pawn] += 1
-                else:
-                    pawns_count[pawn] = 1
-            print(pawns_count)
+            return self.getFrecuency()
         else:
             print("La bolsa de fichas esta vacia")
+            return {}
     
     def takeRandomPawn(self):
         """Agarra una ficha aleatoria de la bolsa y la elimina de la bolsa.
@@ -71,8 +66,14 @@ class Pawns():
             print("La bolsa de fichas esta vacia, no puede agarrar mas")
     
     def getFrecuency(self):
-        return FrecuencyTable.frecuencies
-        
+        """
+        Calcula y devuelve la frecuencia de cada ficha en la bolsa.
+        """
+        frequency_pawns = FrecuencyTable()
+        for letter in self.letters:
+            frequency_pawns.update(letter)
+        return frequency_pawns.showFrequency()       
+
 
 class Word():
     def __init__(self):
@@ -116,7 +117,10 @@ class Word():
         return f.readline().strip().upper()    
 
     def getFrecuency(self):
-        return FrecuencyTable.frecuencies                 
+        frequency = FrecuencyTable()
+        for letter in self.word[0]:
+            frequency.update(letter)
+        return frequency.showFrequency()                 
     
 class Dictionary():
     filepath = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\dictionary.txt"
@@ -141,19 +145,50 @@ class Dictionary():
 class FrecuencyTable():
     def __init__(self):
         self.letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
-                        'n','ñ','o','p','q','r','s','t','u','v','w','y','z']
+                        'n','o','p','q','r','s','t','u','v','w','x','y','z']
         self.frequencies = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        
-            
+       
     def showFrequency(self):
+        """
+        Muestra el numero de veces que aparece una letra
+
+        Returns:
+            set : letras en el conjunto
+        """
+        letters = []
         for letter, frequency in zip(self.letters, self.frequencies):
             if frequency != 0:
-                    print(f'{letter}: {frequency}')
+                print(f'{letter.upper()}: {frequency}')
+                letters.append(letter)           
+        return letters
     
     @staticmethod
-    def isSubset(self,object1, object2):
-        return object1.issubset(object2)
+    def isSubset(letters_1, letters_2):
+        """
+        Verifica si las letras del conjunto 1 estan en el conjunto 2
+
+        Args:
+            letters_1 : Conjunto de letras 1
+            letters_2 : Conjunto de letras 2
+
+        Returns:
+            bolean : False o True si se cumple la condicion
+        """
+        temp_letters_2 = letters_2.copy()
+        for letter in letters_1:
+            if letter in "".join(temp_letters_2):
+                temp_letters_2.remove(letter)
+            else:
+                return False
+        return True
+
     
     def update(self, c:str):
-        index = self.letters.index(c)
+        """
+        Suma 1 a la frecuecia de la letra 'c' a la tabla de frecuencias
+
+        Args:
+            c(str) : letra que se agregara a la tabla de frecuencias
+        """
+        index = self.letters.index(c.lower())
         self.frequencies[index] += 1
