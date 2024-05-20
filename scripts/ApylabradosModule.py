@@ -1,6 +1,6 @@
-import numpy as np
 import csv
 import random
+import numpy as np
 
 class Pawns():
     def __init__(self, letters: str = None):
@@ -117,6 +117,9 @@ class Word():
         return f.readline().strip().upper()    
 
     def getFrecuency(self):
+        """
+        Devuelve el numero de letras que contiene la palabra introducida
+        """
         frequency = FrecuencyTable()
         for letter in self.word[0]:
             frequency.update(letter)
@@ -177,7 +180,7 @@ class FrecuencyTable():
         temp_letters_2 = letters_2.copy()
         for letter in letters_1:
             if letter in "".join(temp_letters_2):
-                temp_letters_2.remove(letter)
+                letters_2.remove(letter)
             else:
                 return False
         return True
@@ -192,3 +195,30 @@ class FrecuencyTable():
         """
         index = self.letters.index(c.lower())
         self.frequencies[index] += 1
+
+
+class Board():
+    def __init__(self) -> None:
+        self.board = np.full((15,15), ' ', dtype=str)
+        self.totalWords = 0 #Numero total de palabras en el tablero.
+        self.totalPawns = 0  #Numero total de fichas colocadas en el tablero.
+        
+    def showBoard(self):
+        """
+        Muestra el tablero
+        """
+        height = len(self.board)
+        width = len(self.board[0])
+        
+        # Encabezado de la columna
+        print("     ", end="")
+        for n in range(width):
+            print(f"{n:02}  ", end=" ")
+        print("\n   " + "╦════" * width + "╦")
+
+        # Filas del tablero
+        for i in range(height):
+            print(f"{i:02} ║", end=" ")
+            for j in range(width):
+                print(f" {self.board[i][j]} ║", end=" ")
+            print("\n   " + "╩════" * width + "╩")
