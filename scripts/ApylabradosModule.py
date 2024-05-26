@@ -2,9 +2,12 @@ import csv
 import random
 import numpy as np
 
+
+
 class Pawns():
     def __init__(self, letters: str = None):
-        """Crear la bolsa de fichas (pawns) del juegos
+        """
+        Crear la bolsa de fichas (pawns) del juegos
 
         Args:
             letters (str, optional): _bolsa con las fichas/letras_. Defaults to np.empty((0)).
@@ -16,7 +19,8 @@ class Pawns():
             self.letters = letters.copy()
     
     def addPawn(self, c: str):
-        """Añade una pieza(pawn) al conjunto de letras
+        """
+        Añade una pieza(pawn) al conjunto de letras
 
         Args:
             c (str): letra a añadir
@@ -24,7 +28,8 @@ class Pawns():
         self.letters.append(c)
     
     def addPawns(self, c: str, n: int):
-        """Añadir Varias fichas a la vez de la misma letra
+        """
+        Añadir Varias fichas a la vez de la misma letra
 
         Args:
             c (str): Letra de la ficha
@@ -34,7 +39,8 @@ class Pawns():
             self.addPawn(c)
     
     def createBag(self):
-        """Crea la bolsa de fichas inicial a partir de archivo
+        """
+        Crea la bolsa de fichas inicial a partir de archivo
             bag_of_pawns.csv
         """
         bags_of_pawns = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\bag_of_pawns.csv"
@@ -45,7 +51,8 @@ class Pawns():
                     self.addPawns(row[0], int(row[1]))
     
     def showPawns(self):
-        """Muestra el numero de fichas que hay en la bolsa
+        """
+        Muestra el numero de fichas que hay en la bolsa
         """
         total_pawns = len(self.letters)
         if total_pawns > 0:
@@ -56,7 +63,8 @@ class Pawns():
             return {}
     
     def takeRandomPawn(self):
-        """Agarra una ficha aleatoria de la bolsa y la elimina de la bolsa.
+        """
+        Agarra una ficha aleatoria de la bolsa y la elimina de la bolsa.
         """
         if self.letters:
             random_pawn_index = random.randint(0, len(self.letters) -1)
@@ -73,6 +81,31 @@ class Pawns():
         for letter in self.letters:
             frequency_pawns.update(letter)
         return frequency_pawns.showFrequency()       
+
+    def takePawn(self, c:str):
+        """
+        Recibe del cojunto de fichas de jugador la ficha que ya esta en el 
+        tablero y la devuelve a la mano
+        
+        Args:
+            c (str): ficha del jugador
+        """
+        self.c = c
+        self.addPawn(c)
+    
+    @staticmethod
+    def getTotalPawns(word):
+        """
+        Devuelve el numero de ficha que tiene la palabra introducida por el
+        jugador
+        
+        Args:
+            word (obj): objeto de la clase word
+            
+        Returns:
+            str list: lista de letras
+        """
+        return [letter for letter in word.word[0]]
 
 
 class Word():
@@ -122,8 +155,10 @@ class Word():
         """
         frequency = FrecuencyTable()
         for letter in self.word[0]:
-            frequency.update(letter)
-        return frequency.showFrequency()                 
+            frequency.update(letter) #Agrega la letra a la tabla de frecuencias de letras.
+        return frequency.showFrequency() #Letras con mas de una frecuencia en la tabla de frecuencias.              
+
+
     
 class Dictionary():
     filepath = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\dictionary.txt"
@@ -143,6 +178,7 @@ class Dictionary():
                 file.close()
                 print("La palabra no se encuentra en el diccionario")
                 return False
+
 
 
 class FrecuencyTable():
@@ -197,8 +233,10 @@ class FrecuencyTable():
         self.frequencies[index] += 1
 
 
+
 class Board():
     def __init__(self) -> None:
+        #Coordenadas/huecos dentro del tablero vacias por defectos
         self.board = np.full((15,15), ' ', dtype=str)
         self.totalWords = 0 #Numero total de palabras en el tablero.
         self.totalPawns = 0  #Numero total de fichas colocadas en el tablero.
@@ -222,3 +260,43 @@ class Board():
             for j in range(width):
                 print(f" {self.board[i][j]} ║", end=" ")
             print("\n   " + "╩════" * width + "╩")
+    
+    def placeWord(self, player_pawns:list, place_word:list, cord_x:int, cord_y:int, direction:str):
+        """
+        Coloca una palabra en el tablero
+
+        Args:
+            player_pawns (str list): Las fichas del jugador
+            place_word (str list): La palabra que quiere colocar en el tablero
+            cord_x (int): Coordenadas del eje x del tableto
+            cord_y (int): Corrdenadas del eje y del tablero
+            direction ('V' or 'H'): Direccion en al que se colocaran las fichas
+        """
+        self.player_pawns = player_pawns 
+        self.place_word = place_word 
+        self.cord_x = cord_x 
+        self.cord_y = cord_y 
+        self.direction = direction 
+        
+        for i, letter in enumerate(place_word):
+            if direction == 'H':
+                # Verifica si la letra ya esta en el tablero y la devuelve a la 
+                # mano del jugador si es True.
+                if self.board[cord_x][cord_y + i] == letter:
+                    player_pawns.takePawn(letter)
+                    self.totalWords -= 1 #punto menos por usar la ficha en el tablero
+                else:
+                    self.board[cord_x][cord_y + i] = letter
+            
+            elif direction == 'V':
+                # Verifica si la letra ya esta en el tablero y la devuelve a la 
+                # mano del jugador si es True.
+                if self.board[cord_x + i][cord_y] == letter:
+                    player_pawns.takePawn(letter)
+                    self.totalWords -= 1 #punto menos por usar la ficha en el tablero
+                else:
+                    self.board[cord_x + i][cord_y] = letter 
+        
+        self.totalWords += 1
+        self.self.totalWords += len(place_word)
+       
