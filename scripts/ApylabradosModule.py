@@ -180,11 +180,11 @@ class Dictionary():
             readed_line = Word.readWordFromFile(file)
             if word.areEqual(readed_line):
                 file.close()
-                return True
+                print("La palabra está en el diccionario")
+                return False
             if readed_line == "":
                 file.close()
-                print("La palabra no se encuentra en el diccionario")
-                return False
+                return True
 
 
 ###############################################################################
@@ -408,20 +408,19 @@ class Board():
             class obejct: objeto work con las fichas que necesitas para 
                         formar la palabra en el tablero.
         """
-        missing_pawns = word()
-        word = word.upper()
+        missing_pawns = Word()
 
         for i, letter in enumerate(word):
             if direction == 'H':
                 # Verifica la letra no esta en el tablero
                 if self.board[cord_x][cord_y + i] != letter:
                     #agrega la letra al diccionario de la clase word
-                    missing_pawns.word.append(letter)
+                    missing_pawns.word.append(letter.lower())
             
             elif direction == 'V':
                 # Verifica la letra no esta en el tablero
                 if self.board[cord_x + i][cord_y] != letter:
                     #agrega la letra al diccionario de la clase word
-                    missing_pawns.word.append(letter)
+                    missing_pawns.word.append(letter.lower())
 
         return missing_pawns
