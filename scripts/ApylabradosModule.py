@@ -1,6 +1,8 @@
 import csv
 import random
 import numpy as np
+import itertools
+import requests
 
 
 ###############################################################################
@@ -185,7 +187,72 @@ class Dictionary():
             if readed_line == "":
                 file.close()
                 return True
+    
+    @staticmethod
+    def showWord(pawns):
+        """
+        Genera las posibles combinaciones de palabras con las fichas recibidas
+        
+        """
+        letters = pawns.letters
+        combinations = []
+        
+        #genera todas las posibles combinaciones y las guarda en una lista
+        for i in range(1, len(letters) + 1):
+            combinations.extend([''.join(p) for p in itertools.permutations(letters, i)])
 
+        # Carga un listado de palabras españolas
+        file = 'D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\word_list.txt'
+        with open(file, "r", encoding="utf-8") as f:
+            words = [line.strip().upper() for line in f]
+   
+        #Muestra las combinaciones si esta no esta en el diccionario
+        word_list = []
+        for combination in combinations:
+            if combination in words and len(combination) > 2:
+                if combination not in word_list:
+                    word_list.append(combination)
+
+        #Muestra las palabras
+        for word in word_list:
+            print(word)          
+
+    @staticmethod
+    def showWordPlus(pawns, c:str):
+        """
+        Recibe un objeto pawns de la clase Pawns y un caracter c y muestra todas 
+        las posibles palabras que contienen el caracter c y que se pueden formar 
+        las fichas de pawns.
+
+        Args:
+            pawns: listado de fichas/letras disponibles
+            c : un caracter
+        """
+        letters = pawns.letters
+        c = c.upper()
+        
+        #agrega la letra a la lista si no se encuentra en ella
+        if c not in letters:
+            letters.append(c)
+        
+        # Carga un listado de palabras españolas
+        file = 'D:/Programacion/Git_And_GitHub/Proyecto-python-fin-curso/datas/word_list.txt'
+        with open(file, "r", encoding="utf-8") as f:
+            words = [line.strip().upper() for line in f]
+            
+        #Realiza todas las posibles combinaciones
+        word_list = []
+        for i in range(1, len(letters) + 1):
+            for combination in itertools.permutations(letters, i):
+                word = ''.join(combination)
+                # Verificar que la palabra contiene el carácter c y es válida
+                if c in word and word in words and len(word) > 2:
+                    if word not in word_list:
+                        word_list.append(word)        
+        
+        #Muestra las palabras
+        for word in word_list:
+            print(word)          
 
 ###############################################################################
 ### TABLA DE FRECUENCIAS DE FICHAS
@@ -283,11 +350,6 @@ class Board():
             cord_y (int): Corrdenadas del eje y del tablero
             direction ('V' or 'H'): Direccion en al que se colocaran las fichas
         """
-        self.player_pawns = player_pawns 
-        self.place_word = place_word 
-        self.cord_x = cord_x 
-        self.cord_y = cord_y 
-        self.direction = direction 
         
         for i, letter in enumerate(place_word):
             if direction == 'H':
@@ -309,40 +371,41 @@ class Board():
                     self.board[cord_x + i][cord_y] = letter 
         
         self.totalWords += 1
-        self.totalWords += len(place_word)
+        self.totalPawns += len(place_word)
         
     def isPossible(self, word, cord_x, cord_y, direction):
         """
         Verifica si cumple las reglas del juego la palabra que se va a
         colocar en el tablero
-        """                       
-        # La primera palabra debe tener al menos una ficha situada en la casilla central
-        if self.totalWords == 0:
-            if direction == "H":
-                if 7 not in range(cord_x, cord_x+len(word)):
-                    message = "La primera palabra debe tener al menos una ficha en la casilla central (7, 7)"
-                    return (False, message)
-            elif direction == "V":
-                if 7 not in range(cord_y, cord_y + len(word)):
-                    message = "La primera palabra debe tener al menos una ficha en la casilla central (7, 7)"
-                    return(False, message)
-        
+        """
         #La palabra no puede salirse de los limites del tablero:
         if direction == "H":
-            if cord_x < 0 or cord_x + len(word) > 14:
+            if cord_x < 0 or cord_x + len(word)-1 > 15:
                 message = "La palabra no puede salirse de los limites del tablero"
                 return (False, message)
         elif direction == "V":
-            if cord_y < 0 or cord_y + len(word) > 14:
+            if cord_y < 0 or cord_y + len(word)-1 > 15:
                 message = "La palabra no puede salirse de los limites del tablero"
                 return (False, message)
+                               
+        # La primera palabra debe tener al menos una ficha situada en la casilla central
+        if self.totalWords == 0:
+            if direction == "H" and cord_x == 7 and 7 in range(cord_y, cord_y + len(word)):
+                message = "Ha sido posible colocar la palabra en el tablero"
+                return (True, message)
+            elif direction == "V" and cord_y == 7 and 7 in range(cord_x, cord_x + len(word)):
+                message = "Ha sido posible colocar la palabra en el tablero"
+                return (True, message)
+            else: 
+                message = "La primera palabra debe tener al menos una ficha en la casilla central (7, 7)"
+                return(False, message)
         
         #Todas las palabras, a excepción de la primera, deben usar una ficha ya existente en el tablero.
         if self.totalWords > 0:
             flag = False
             if direction == "V":
                 for i, letter in enumerate(word):
-                    if self.board[cord_x + 1][cord_y] == letter:
+                    if self.board[cord_x + i][cord_y] == letter:
                         flag = True
                         break
             elif direction == "H":                      
@@ -355,41 +418,42 @@ class Board():
                 return (False, message)
             
         #Hay que colocar al menos una nueva ficha en el tablero
-        flag = False
+        new_letter_placed = False
         for i, letter in enumerate(word):
-            if direction == "V":               
-                    if self.board[cord_x + 1][cord_y] != letter:
-                        flag = True
-                        break
-            elif direction == "H":                      
-                    if self.board[cord_x][cord_y + i] != letter:
-                        flag = True
-                        break
-        if flag == False:
+            if direction == "H":
+                if self.board[cord_x][cord_y + i] != letter:
+                    new_letter_placed = True
+                    break
+            elif direction == "V":
+                if self.board[cord_x + i][cord_y] != letter:
+                    new_letter_placed = True
+                    break
+        if not new_letter_placed:
             message = "Hay que colocar al menos una nueva ficha en el tablero"
-            return (False, message)                
+            return (False, message)                               
         
         # No puede haber una ficha al principio o al final de la palabra que 
         # se vaya a colocar sobre el tablero si ésta no pertenece a la palabra
-        flag = False
-        if direction == "V":               
-            if cord_x > 0 and self.board[cord_x - 1][cord_y] != " ":
-                flag = True
-            elif (cord_x + len(word)) < 15 and self.board[cord_x+len(word)+1][cord_y] != " ":
-                flag = True
-
-        elif direction == "H":                      
-            if cord_y > 0 and self.board[cord_x][cord_y - 1] != " ":
-                flag = True
-            elif (cord_y + len(word)) < 15 and self.board[cord_x][cord_y+len(word)+1] != " ":
-                flag = True
-                
-        if flag == True:
-            message = "No puede haber una ficha al principio o al final "
-            message += "de la palabra que se valla a colocar"
-            return (False, message)             
-            
-
+        if direction == "H":
+            #verifica si hay una ficha en el lado izquiedo de la palabra                       
+            if cord_y > 0 and self.board[cord_x][cord_y - 1] != ' ':
+                message = "No puede haber una ficha adyacente al inicio de la palabra"
+                return (False, message)
+            #verifica si hay una ficha en el lado derecho de la palabra    
+            if cord_y + len(word) < 15 and self.board[cord_x][cord_y + len(word)] != ' ':
+                message = "No puede haber una ficha adyacente al final de la palabra"
+                return (False, message)
+        
+        elif direction == "V":
+            #verifica si hay una ficha en el lado izquiedo de la palabra              
+            if cord_x > 0 and self.board[cord_x - 1][cord_y] != ' ':
+                message = "No puede haber una ficha adyacente al inicio de la palabra"
+                return (False, message)
+            #verifica si hay una ficha en el lado derecho de la palabra
+            if cord_x + len(word) < 15 and self.board[cord_x + len(word)][cord_y] != ' ':
+                message = "No puede haber una ficha adyacente al final de la palabra"
+                return (False, message)           
+    
         message = "Ha sido posible colocar la palabra en el tablero"
         return (True, message)
        
@@ -424,3 +488,26 @@ class Board():
                     missing_pawns.word.append(letter.lower())
 
         return missing_pawns
+    
+    def showWordPlacement(self, player_pawns, word):
+        """
+        Muestra por pantalla todas las posibles colocaciones de las fichas 
+        en el tablero.
+        """
+        print("\nDirecciones permitidas para colocar en el tablero: ")
+        for direction in (0, 1):
+            for cord_x in range(0, 15):
+                for cord_y in range(0,15):
+                    if direction == 0:
+                        checking = self.isPossible(word, cord_x, cord_y, "V")
+                        if checking[0]:
+                            print(f"·Vertical:{cord_x}, Horizontal:{cord_y}, Direction:'V'")
+                            
+                    else:
+                        checking = self.isPossible(word, cord_x, cord_y, "H")
+                        if checking[0]:
+                            print(f"·Vertical:{cord_x}, Horizontal:{cord_y}, Direction:'H'")
+    
+   
+            
+        
