@@ -2,19 +2,27 @@ import csv
 import random
 import numpy as np
 import itertools
-import requests
 
 
 ###############################################################################
 ### TRABAJO CON LAS FICHAS
 ###############################################################################
 class Pawns():
+    #Valor en puntos de cada letra
+    points = {
+        'A': 1, 'B': 3, 'C': 3, 'D': 2, 'E': 1, 'F': 4, 'G': 2, 
+        'H': 4, 'I': 1, 'J': 8, 'K': 5, 'L': 1, 'M': 3, 'N': 1, 
+        'O': 1, 'P': 3, 'Q': 10, 'R': 1, 'S': 1, 'T': 1, 'U': 1, 
+        'V': 4, 'W': 4, 'X': 8, 'Y': 4, 'Z': 10
+    }
+    
     def __init__(self, letters: str = None):
         """
-        Crear la bolsa de fichas (pawns) del juegos
+        Crear la bolsa de fichas (pawns) del juego.
 
         Args:
-            letters (str, optional): _bolsa con las fichas/letras_. Defaults to np.empty((0)).
+            letters (list, optional): Bolsa con las fichas/letras por defecto
+            estará vacia.
         """
         self.letters = letters
         if letters is None:
@@ -110,6 +118,30 @@ class Pawns():
             str list: lista de letras
         """
         return [letter for letter in word.word[0]]
+    
+    @staticmethod
+    def getPoints(c:str):
+        """
+        Obtiene la puntuacion de la letra introducida.
+
+        Args:
+            c (str): Una letra cualquiera
+
+        Returns:
+            int : Devuelve el valor en puntos de la letras
+        """
+        return Pawns.points[c]
+    
+    @staticmethod
+    def showPawnsPoints():
+        """
+        Muestra el valor en puntos de cada letra
+        """
+        print("\nPuntuación de las letras:")
+        print("-" * 40)
+        for letter, point in Pawns.points.items():
+            print(f"{letter} -> {point} puntos")
+        
 
 
 ###############################################################################
@@ -202,7 +234,7 @@ class Dictionary():
             combinations.extend([''.join(p) for p in itertools.permutations(letters, i)])
 
         # Carga un listado de palabras españolas
-        file = 'D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\word_list.txt'
+        file = 'D:/Programacion/Git_And_GitHub/Proyecto-python-fin-curso/datas/word_list.txt'
         with open(file, "r", encoding="utf-8") as f:
             words = [line.strip().upper() for line in f]
    
@@ -313,6 +345,8 @@ class FrecuencyTable():
 ### EL TABLERO DE JUEGO
 ###############################################################################
 class Board():
+    score = 0 # Puntuacion total en el juego.
+    
     def __init__(self) -> None:
         #Coordenadas/huecos dentro del tablero vacias por defectos
         self.board = np.full((15,15), ' ', dtype=str)
@@ -360,6 +394,7 @@ class Board():
                     self.totalWords -= 1 #punto menos por usar la ficha en el tablero
                 else:
                     self.board[cord_x][cord_y + i] = letter
+                    Board.score += Pawns.points[letter]
             
             elif direction == 'V':
                 # Verifica si la letra ya esta en el tablero y la devuelve a la 
@@ -368,7 +403,8 @@ class Board():
                     player_pawns.takePawn(letter)
                     self.totalWords -= 1 #punto menos por usar la ficha en el tablero
                 else:
-                    self.board[cord_x + i][cord_y] = letter 
+                    self.board[cord_x + i][cord_y] = letter
+                    Board.score += Pawns.points[letter] 
         
         self.totalWords += 1
         self.totalPawns += len(place_word)
