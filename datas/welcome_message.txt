@@ -1,0 +1,2 @@
+Bienvenidos/as al mejor juego de apalabras jamas creado, enteramente con Python!!! 
+Espero que lo disfrutes.
