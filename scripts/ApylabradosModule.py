@@ -68,7 +68,6 @@ class Pawns():
         """
         total_pawns = len(self.letters)
         if total_pawns > 0:
-            print(f"Numero total de fichas: {total_pawns}")
             return self.getFrecuency()
         else:
             print("La bolsa de fichas esta vacia")
@@ -161,9 +160,7 @@ class Word():
         """
         Comprueba si dos palabras son iguales
         """
-        if w in self.word:
-            return True
-        return False
+        return w in self.word
     
     def isEmpty(self):
         """
@@ -202,23 +199,20 @@ class Word():
 ### DICCIONARIO PALABRAS EMPLEADAS EN EL JUEGO
 ###############################################################################    
 class Dictionary():
-    filepath = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\dictionary.txt"
+    dictionary = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\word_list.txt"
     
     @staticmethod
     def validateWord(word:str):
         """
         Comprueba si una palabra esta en el diccionario
         """
-        file = open(Dictionary.filepath, 'r')
-        while True:
-            readed_line = Word.readWordFromFile(file)
-            if word.areEqual(readed_line):
-                file.close()
-                print("La palabra está en el diccionario")
-                return False
-            if readed_line == "":
-                file.close()
-                return True
+        with open(Dictionary.dictionary, 'r', encoding='utf-8') as file:
+            while True:
+                readed_line = Word.readWordFromFile(file)
+                if word.areEqual(readed_line):
+                    return True
+                if readed_line == "":
+                    return False
     
     @staticmethod
     def showWord(pawns):
@@ -233,9 +227,8 @@ class Dictionary():
         for i in range(1, len(letters) + 1):
             combinations.extend([''.join(p) for p in itertools.permutations(letters, i)])
 
-        # Carga un listado de palabras españolas
-        file = 'D:/Programacion/Git_And_GitHub/Proyecto-python-fin-curso/datas/word_list.txt'
-        with open(file, "r", encoding="utf-8") as f:
+        # Carga el listado de palabras españolas
+        with open(Dictionary.dictionary, "r", encoding="utf-8") as f:
             words = [line.strip().upper() for line in f]
    
         #Muestra las combinaciones si esta no esta en el diccionario
@@ -246,8 +239,13 @@ class Dictionary():
                     word_list.append(combination)
 
         #Muestra las palabras
-        for word in word_list:
-            print(word)          
+        if word_list:
+            for word in word_list:
+                print(word)
+        else:
+            print("\nNo se han encontrado combinaciones con tus letras")
+            print("Se te repartiran nuevas fichas\n")
+            return False          
 
     @staticmethod
     def showWordPlus(pawns, c:str):
@@ -268,8 +266,7 @@ class Dictionary():
             letters.append(c)
         
         # Carga un listado de palabras españolas
-        file = 'D:/Programacion/Git_And_GitHub/Proyecto-python-fin-curso/datas/word_list.txt'
-        with open(file, "r", encoding="utf-8") as f:
+        with open(Dictionary.dictionary, "r", encoding="utf-8") as f:
             words = [line.strip().upper() for line in f]
             
         #Realiza todas las posibles combinaciones
@@ -324,7 +321,7 @@ class FrecuencyTable():
         temp_letters_2 = letters_2.copy()
         for letter in letters_1:
             if letter in "".join(temp_letters_2):
-                letters_2.remove(letter)
+                temp_letters_2.remove(letter)
             else:
                 return False
         return True
@@ -390,8 +387,7 @@ class Board():
                 # Verifica si la letra ya esta en el tablero y la devuelve a la 
                 # mano del jugador si es True.
                 if self.board[cord_x][cord_y + i] == letter:
-                    player_pawns.takePawn(letter)
-                    self.totalWords -= 1 #punto menos por usar la ficha en el tablero
+                    self.totalPawns -= 1
                 else:
                     self.board[cord_x][cord_y + i] = letter
                     Board.score += Pawns.points[letter]
@@ -400,8 +396,7 @@ class Board():
                 # Verifica si la letra ya esta en el tablero y la devuelve a la 
                 # mano del jugador si es True.
                 if self.board[cord_x + i][cord_y] == letter:
-                    player_pawns.takePawn(letter)
-                    self.totalWords -= 1 #punto menos por usar la ficha en el tablero
+                    self.totalPawns -= 1
                 else:
                     self.board[cord_x + i][cord_y] = letter
                     Board.score += Pawns.points[letter] 
@@ -441,15 +436,30 @@ class Board():
             flag = False
             if direction == "V":
                 for i, letter in enumerate(word):
-                    if self.board[cord_x + i][cord_y] == letter:
-                        flag = True
-                        break
+                    #comprueba que no se sale del tablero la palabra
+                    if cord_x + i < 15:
+                        if self.board[cord_x + i][cord_y] == letter:
+                            flag = True
+                        elif self.board[cord_x + i][cord_y] != ' ':
+                            message = "No se puede superponer con otra palabra diferente."
+                            return (False, message)                            
+                    else:
+                        message = "La palabra se excede del tablero"
+                        return (False, message)
+                    
             elif direction == "H":                      
                 for i, letter in enumerate(word):
-                    if self.board[cord_x][cord_y + i] == letter:
-                        flag = True
-                        break
-            if flag == False:
+                    if cord_y + i < 15: 
+                        if self.board[cord_x][cord_y + i] == letter:
+                            flag = True
+                        elif self.board[cord_x][cord_y + i] != ' ':
+                            message = "No se puede superponer con otra palabra diferente."
+                            return (False, message)  
+                    else:
+                        message = "La palabra se excede del tablero"
+                        return (False, message)
+                                          
+            if not flag:
                 message = "Debes usar una ficha ya existente en el tablero"
                 return (False, message)
             
@@ -531,19 +541,47 @@ class Board():
         en el tablero.
         """
         print("\nDirecciones permitidas para colocar en el tablero: ")
+        posible_directions = 0
         for direction in (0, 1):
             for cord_x in range(0, 15):
                 for cord_y in range(0,15):
                     if direction == 0:
                         checking = self.isPossible(word, cord_x, cord_y, "V")
                         if checking[0]:
+                            posible_directions += 1
                             print(f"·Vertical:{cord_x}, Horizontal:{cord_y}, Direction:'V'")
                             
                     else:
                         checking = self.isPossible(word, cord_x, cord_y, "H")
                         if checking[0]:
+                            posible_directions += 1
                             print(f"·Vertical:{cord_x}, Horizontal:{cord_y}, Direction:'H'")
+        if posible_directions == 0:
+            print("La palabra no se puede colocar en el tablero")
+            print("Debe coincidir al menos una ficha con alguna palabra del tablero")
+            return False
+        return True
     
-   
+    def welcome(self):
+        """
+        Imprime un mensaje de bienvenida
+        """
+        welcome_file = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\welcome_message.txt"
+        
+        with open (welcome_file, 'r') as f:
+            file_content = f.read()
+            
+        print(file_content)
+    
+    def instructions(self):
+        """
+        Imprime las instrucciones del juego
+        """
+        welcome_file = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\instructions_message.txt"
+        
+        with open (welcome_file, 'r') as f:
+            file_content = f.read()
+            
+        print(file_content)  
             
         
