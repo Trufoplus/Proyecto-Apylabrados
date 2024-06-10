@@ -1,0 +1,31 @@
+Instrucciones para Jugar Apylabrados
+
+1. Objetivo del Juego:
+   - El objetivo es obtener la maxima puntuacion posible al colocar palabras en el tablero.
+
+2. Tablero de Juego:
+   - El tablero tiene 15 filas por 15 columnas, con un total de 225 casillas que pueden contener letras o estar vacias.
+
+3. Colocacion de la Primera Palabra:
+   - La primera palabra debe colocarse de manera que al menos una ficha este en la casilla central del tablero.
+
+4. Fichas Disponibles:
+   - Se disponen de 100 fichas, de las cuales se seleccionan aleatoriamente 7 al comienzo del juego.
+
+5. Turno del Jugador:
+   - En cada turno, se mostraran al jugador las 7 fichas disponibles para formar una nueva palabra y colocarla en el tablero.
+
+6. Colocacion de Palabras:
+   - Para colocar una palabra, el jugador indica la fila y columna donde se ubicara la primera ficha de la palabra, y su direccion (vertical u horizontal).
+
+7. Verificacion de la Palabra:
+   - El programa verifica que la palabra exista en un diccionario, que quepa en el tablero sin exceder los limites, que anada al menos una nueva ficha al tablero, y que no sobreescriba fichas existentes.
+
+8. Puntuacion y Nuevas Fichas:
+   - Tras colocar una palabra, se proporcionan nuevas fichas al jugador para volver a tener un total de 7. Se muestra la puntuacion actualizada.
+
+9. Ayuda del Programa:
+   - El usuario puede solicitar ayuda para encontrar posiciones disponibles para una palabra o para formar palabras con las fichas disponibles.
+
+Que disfrutes jugando a Apylabrados!
+
