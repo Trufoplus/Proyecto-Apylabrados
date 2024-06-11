@@ -320,6 +320,8 @@ class FrecuencyTable():
         """
         temp_letters_2 = letters_2.copy()
         for letter in letters_1:
+            # nos aseguramos que la letra esta en mayuscula para hacer la verificacion.
+            letter  = letter.upper()
             if letter in "".join(temp_letters_2):
                 temp_letters_2.remove(letter)
             else:
@@ -375,7 +377,7 @@ class Board():
         Coloca una palabra en el tablero
 
         Args:
-            player_pawns (str list): Las fichas del jugador
+            player_pawns (object): objeto de la clase Pawns, con las fichas del jugador.
             place_word (str list): La palabra que quiere colocar en el tablero
             cord_x (int): Coordenadas del eje x del tableto
             cord_y (int): Corrdenadas del eje y del tablero
@@ -388,6 +390,10 @@ class Board():
                 # mano del jugador si es True.
                 if self.board[cord_x][cord_y + i] == letter:
                     self.totalPawns -= 1
+                    # Agrega la letra a la mano, para evitar problemas a la hora
+                    # de eliminar las letras que forman la palabra de tu mano. 
+                    if letter not in player_pawns.letters:
+                        player_pawns.letters.append(letter)
                 else:
                     self.board[cord_x][cord_y + i] = letter
                     Board.score += Pawns.points[letter]
