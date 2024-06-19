@@ -2,6 +2,7 @@ import csv
 import random
 import numpy as np
 import itertools
+import matplotlib.pyplot as plt
 
 
 ###############################################################################
@@ -356,21 +357,32 @@ class Board():
         """
         Muestra el tablero
         """
-        height = len(self.board)
-        width = len(self.board[0])
-        
-        # Encabezado de la columna
-        print("     ", end="")
-        for n in range(width):
-            print(f"{n:02}  ", end=" ")
-        print("\n   " + "╦════" * width + "╦")
-
-        # Filas del tablero
-        for i in range(height):
-            print(f"{i:02} ║", end=" ")
-            for j in range(width):
-                print(f" {self.board[i][j]} ║", end=" ")
-            print("\n   " + "╩════" * width + "╩")
+        # Crear un array de 15x15 con valores cero
+        grid = np.zeros((15, 15))
+        # Crear la figura y los ejes
+        fig, ax = plt.subplots()
+        # Usar imshow para mostrar la cuadrícula
+        cax = ax.imshow(grid, cmap = 'Greys')
+        # Añadir líneas de cuadrícula
+        ax.set_xticks(np.arange(-0.5, 15, 1), minor=True)
+        ax.set_yticks(np.arange(-0.5, 15, 1), minor=True)
+        ax.grid(which='minor', color='black', linestyle='-', linewidth=1)
+        # Configurar las etiquetas de los ticks en los ejes x e y
+        ax.set_xticks(np.arange(0, 15, 1))
+        ax.set_yticks(np.arange(0, 15, 1))
+        ax.set_xticklabels(np.arange(0, 15, 1))
+        ax.set_yticklabels(np.arange(0, 15, 1))
+        # Quitar los ticks
+        ax.tick_params(which='minor',bottom=False, left=False)
+    
+        # Añadir caracteres del tablero
+        for i in range(15):
+            for j in range(15):
+                ax.text(j, i, self.board[i, j], va='center', ha='center', color='blue')
+                
+        # Mostrar el tablero
+        plt.title('TABLERO DE JUEGO')
+        plt.show()
     
     def placeWord(self, player_pawns:list, place_word:list, cord_x:int, cord_y:int, direction:str):
         """
