@@ -357,21 +357,40 @@ class Board():
         """
         Muestra el tablero
         """
-        # Crear un array de 15x15 con valores cero
-        grid = np.zeros((15, 15))
+        # Crear un array de 15x15x3 con valores unos (casillas en blanco)
+        grid = np.ones((15, 15, 3))
+        
+        # Función para convertir color hexadecimal a RGB
+        def hex_to_rgb(hex_color):
+            hex_color = hex_color.lstrip('#') #elimina el simbolo de la cadena
+            return [int(hex_color[i:i+2], 16)/255.0 for i in (0, 2, 4)]
+        
+        # Leer el archivo CSV y modificar los valores en la matriz
+        xycolor_path = r'D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\xycolor_board.csv'
+        with open(xycolor_path, 'r') as f:
+            csv_reader = csv.reader(f)
+            for x, y, color in csv_reader:
+                x = int(float(x))  # Convertir coordenada x a entero
+                y = int(float(y))  # Convertir coordenada y a entero
+                grid[x, y] = hex_to_rgb(color)  # Convertir el color y asignarlo
+                
         # Crear la figura y los ejes
         fig, ax = plt.subplots()
+        
         # Usar imshow para mostrar la cuadrícula
-        cax = ax.imshow(grid, cmap = 'Greys')
+        cax = ax.imshow(grid)
+        
         # Añadir líneas de cuadrícula
         ax.set_xticks(np.arange(-0.5, 15, 1), minor=True)
         ax.set_yticks(np.arange(-0.5, 15, 1), minor=True)
         ax.grid(which='minor', color='black', linestyle='-', linewidth=1)
+        
         # Configurar las etiquetas de los ticks en los ejes x e y
         ax.set_xticks(np.arange(0, 15, 1))
         ax.set_yticks(np.arange(0, 15, 1))
         ax.set_xticklabels(np.arange(0, 15, 1))
         ax.set_yticklabels(np.arange(0, 15, 1))
+        
         # Quitar los ticks
         ax.tick_params(which='minor',bottom=False, left=False)
     
