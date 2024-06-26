@@ -3,6 +3,17 @@ import random
 import numpy as np
 import itertools
 import matplotlib.pyplot as plt
+import logging
+
+
+
+logging.basicConfig(
+    filename = 'my_log.log',
+    filemode = 'a',
+    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt = '%d-%m-%Y',
+    level = logging.INFO
+)
 
 
 ###############################################################################
@@ -352,6 +363,7 @@ class Board():
         self.board = np.full((15,15), ' ', dtype=str)
         self.totalWords = 0 #Numero total de palabras en el tablero.
         self.totalPawns = 0  #Numero total de fichas colocadas en el tablero.
+        self.multiplier = [] #Multiplicadores para la letra/palabra en cada casilla.
         
     def showBoard(self):
         """
@@ -414,7 +426,8 @@ class Board():
             cord_y (int): Corrdenadas del eje y del tablero
             direction ('V' or 'H'): Direccion en al que se colocaran las fichas
         """
-        
+        super_flag = 0 # si > 0, se debe multiplicar los puntos por el numero indicado
+        word_points = 0 # Puntos que vale la palabra colocada
         for i, letter in enumerate(place_word):
             if direction == 'H':
                 # Verifica si la letra ya esta en el tablero y la devuelve a la 
@@ -427,7 +440,25 @@ class Board():
                         player_pawns.letters.append(letter)
                 else:
                     self.board[cord_x][cord_y + i] = letter
-                    Board.score += Pawns.points[letter]
+                    # Aplica multiplicador a la ficha si esta esta en la casilla
+                    # que contiene multiplicador.
+                    logging.info(f'\nEstamos en la cord ({cord_x},{cord_y + i}), letra: {letter}\n')
+                    flag = 0 # Bandera para indicar si se a aplicado multiplicador.
+                    for line in self.setUpMultiplier():
+                        if int(line[0]) == cord_x and line[1] == cord_y + i:
+                            if line[3] == "p": # multiplica la letra solo
+                                word_points += Pawns.points[letter] * int(line[2]) 
+                                flag = 1 # indica que se ha multiplicado la letra
+                                logging.info(f'"{letter}" Se ha multiplicado por {line[2]}')
+                                logging.info(f'puntos = {word_points}\n')
+                            else:
+                                super_flag += int(line[2]) # marca que se debe multiplicar toda la palabra
+                                word_points += Pawns.points[letter]
+                    if flag == 0:    
+                        word_points += Pawns.points[letter]
+                        logging.info(f'"{letter}" no se multiplica por nada')
+                        logging.info(f'puntos = {word_points}\n')
+ 
             
             elif direction == 'V':
                 # Verifica si la letra ya esta en el tablero y la devuelve a la 
@@ -435,9 +466,34 @@ class Board():
                 if self.board[cord_x + i][cord_y] == letter:
                     self.totalPawns -= 1
                 else:
-                    self.board[cord_x + i][cord_y] = letter
-                    Board.score += Pawns.points[letter] 
+                    self.board[cord_x + i][cord_y] = letter                   
+                    # Aplica multiplicador a la ficha si esta esta en la casilla
+                    # que contiene multiplicador.
+                    logging.info(f'Estamos en la cord ({cord_x},{cord_y + i}), letra: {letter}')
+                    flag = 0 # Bandera para indicar si se a aplicado multiplicador.
+                    for line in self.setUpMultiplier():
+                        if int(line[0]) == cord_x + i and int(line[1]) == cord_y:
+                            if line[3] == "p": # multiplica la letra solo
+                                word_points += Pawns.points[letter] * int(line[2])
+                                flag = 1 # indica que se ha multiplicado la letra
+                                logging.info(f'"{letter}" Se ha multiplicado por {line[2]}')
+                                logging.info(f'puntos = {word_points}\n')
+                            else:
+                                super_flag += int(line[2]) # marca que se debe multiplicar toda la palabra
+                                word_points += Pawns.points[letter]
+                    if flag == 0:    
+                        word_points += Pawns.points[letter]
+                        logging.info(f'"{letter}" no se multiplica por nada')
+                        logging.info(f'puntos = {word_points}\n')                    
         
+        if super_flag == 0: 
+            Board.score += word_points
+        else: # Si super_flag > 0 multiplica todos los puntos por su valor
+            word_points *= super_flag
+            Board.score += word_points
+            logging.info(f'se multiplica todas las letras por {super_flag}')
+            logging.info(f'puntos final = {word_points}\n')
+            
         self.totalWords += 1
         self.totalPawns += len(place_word)
         
@@ -620,5 +676,21 @@ class Board():
             file_content = f.read()
             
         print(file_content)  
-            
+    
+    def setUpMultiplier(self):
+        """
+        Guarda los multiplicadores (x2 o x3) y el tipo de multiplicador a aplicar,
+        si es a una palabra o a una letra.
+        """
+        
+        multiplier_board = r"D:\Programacion\Git_And_GitHub\Proyecto-python-fin-curso\datas\multiplier_board.csv"
+        
+        with open (multiplier_board, 'r') as f:
+            reader = csv.reader(f)
+            for x, y, multiplier, type in reader:
+                self.multiplier.append((x, y, multiplier, type))
+        return self.multiplier
+
+                
+    
         
