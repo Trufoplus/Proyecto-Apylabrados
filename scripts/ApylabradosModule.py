@@ -416,22 +416,42 @@ class Board():
         
         #Mostrar fichas en el tablero
         plt.text(0, -0.2, f"FICHAS:", weight="bold", transform=ax.transAxes)
-        box = {'facecolor': 'yellow', 'alpha':0.5, 'boxstyle': 'square, pad=0.5'}
-        
+        box = {'facecolor': 'yellow', 'alpha':0.5, 'boxstyle': 'square, pad=0.5'} # Forma de la ficha 
         axis_x = [0.2, 0.32, 0.44, 0.56, 0.68, 0.8, 0.92] #coordenadas para el eje x
         for index, pawn in enumerate(your_pawns.showPawns()):
-            plt.text(axis_x[index], -0.2, pawn, transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 1
-        
-        # plt.text(0.2, -0.2, your_pawns.showPawns()[0], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 1
-        # plt.text(0.32, -0.2, your_pawns.showPawns()[1], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 2
-        # plt.text(0.44, -0.2, your_pawns.showPawns()[2], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 3
-        # plt.text(0.56, -0.2, your_pawns.showPawns()[3], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 4
-        # plt.text(0.68, -0.2, your_pawns.showPawns()[4], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 5
-        # plt.text(0.8, -0.2, your_pawns.showPawns()[5], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 6
-        # plt.text(0.92, -0.2, your_pawns.showPawns()[6], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 7         
+            plt.text(axis_x[index], -0.2, pawn, transform=ax.transAxes, fontsize = 13, bbox = box) # Fichas       
                
         # Mostrar el tablero
-        plt.title('TABLERO DE JUEGO')
+        plt.title('APYLABRADOS')
+        plt.show()
+    
+    def helpLegend(self):
+        """
+        Muestra la leyenda de los colores de la casillas de nuestro tablero
+        """
+        # Crear una nueva figura
+        fig, ax = plt.subplots(figsize=(9, 1))
+
+        # Añadir texto con recuadros de colores
+        legend_elements = [
+            ('#FFCCCC', 'PALABRA\nX3'),
+            ('#B2FFCD', 'PALABRA\nX2'),
+            ('#CCF9FF', 'LETRA\nX2'),
+            ('#CCCEFF', 'LETRA\nX3')
+        ]
+
+        for i, (color, text) in enumerate(legend_elements):
+            box_x = i * 0.25 + 0.05  # Ajustar la posición x de la caja
+            text_x = box_x + 0.03  # Ajuste para colocar el texto fuera de la caja
+            box = {'facecolor': color, 'boxstyle': 'square, pad=1', 'edgecolor':'white'}  # Forma de la ficha
+            ax.text(box_x, 0.5, ' ', bbox=box, ha='center', va='center')
+            ax.text(text_x, 0.5, text, ha='left', va='center', fontsize=12)
+
+        # Ocultar los ejes
+        ax.set_axis_off()
+               
+        # Mostrar el tablero
+        plt.title ('Multiplicadores de las casilla de colores')
         plt.show()
     
     def placeWord(self, player_pawns:list, place_word:list, cord_x:int, cord_y:int, direction:str):
