@@ -417,13 +417,18 @@ class Board():
         #Mostrar fichas en el tablero
         plt.text(0, -0.2, f"FICHAS:", weight="bold", transform=ax.transAxes)
         box = {'facecolor': 'yellow', 'alpha':0.5, 'boxstyle': 'square, pad=0.5'}
-        plt.text(0.2, -0.2, your_pawns.showPawns()[0], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 1
-        plt.text(0.32, -0.2, your_pawns.showPawns()[1], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 2
-        plt.text(0.44, -0.2, your_pawns.showPawns()[2], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 3
-        plt.text(0.56, -0.2, your_pawns.showPawns()[3], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 4
-        plt.text(0.68, -0.2, your_pawns.showPawns()[4], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 5
-        plt.text(0.8, -0.2, your_pawns.showPawns()[5], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 6
-        plt.text(0.92, -0.2, your_pawns.showPawns()[6], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 7         
+        
+        axis_x = [0.2, 0.32, 0.44, 0.56, 0.68, 0.8, 0.92] #coordenadas para el eje x
+        for index, pawn in enumerate(your_pawns.showPawns()):
+            plt.text(axis_x[index], -0.2, pawn, transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 1
+        
+        # plt.text(0.2, -0.2, your_pawns.showPawns()[0], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 1
+        # plt.text(0.32, -0.2, your_pawns.showPawns()[1], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 2
+        # plt.text(0.44, -0.2, your_pawns.showPawns()[2], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 3
+        # plt.text(0.56, -0.2, your_pawns.showPawns()[3], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 4
+        # plt.text(0.68, -0.2, your_pawns.showPawns()[4], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 5
+        # plt.text(0.8, -0.2, your_pawns.showPawns()[5], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 6
+        # plt.text(0.92, -0.2, your_pawns.showPawns()[6], transform=ax.transAxes, fontsize = 13, bbox = box) # ficha 7         
                
         # Mostrar el tablero
         plt.title('TABLERO DE JUEGO')
