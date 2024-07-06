@@ -53,7 +53,7 @@ Implementar un programa que permita al usuario jugar de forma individual al jueg
 * En cada turno, se debe mostrar al usuario las fichas de las que dispone para poder formar una nueva palabra y colocarla en el tablero. Como se dijo anteriormente, la primera palabra debe tener al menos una ficha sobre la casilla central.
 * Para poder colocar una palabra nueva en el tablero, el usuario deberá indicar la fila y la columna donde colorcar la primera ficha de la palabra y la dirección (vertical u horizontal) en la que se colocará la palabra. La casilla superior izquierda es la casilla (0, 0); la casilla inferior derecha es la (14, 14); la casilla central es la casilla (7, 7).
 * El programa debe verificar que la palabra puede situarse en el tablero. La verificación consiste en:
-  - Comprobar que la palabra exite, mediante su búsqueda en un diccionario (será un fichero de texto).
+  - Comprobar que la palabra exite, mediante su búsqueda en un diccionario.
   - Validar que la palabra cabe en el tablero sin superar los márgenes.
   - Comprobar que la nueva palabra añade al menos una nueva ficha al tablero.
   - Validar que la nueva palabra no sobreescribe fichas ya existentes sobre el tablero.
@@ -70,4 +70,3 @@ Implementar un programa que permita al usuario jugar de forma individual al jueg
 
 * El diccionario de palabras es un fichero de texto que contiene todas las palabras que se pueden formar. Cada palabra se encuentra en una línea del fichero. Las palabras están en mayúsculas.
 * Si la palabra no se encuentra en el diccionario, entonces dicha palabra no es válida y no puede situarse sobre el tablero.
-* Se proporcionará un fichero de ejemplo, pero es posible utilizar cualquier otro diccionario que se considere.
